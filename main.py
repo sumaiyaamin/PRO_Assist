@@ -4,6 +4,9 @@ import datetime
 import wikipedia #pip install wikipedia
 import webbrowser
 import os
+import pywhatkit #pip install pywhatkit
+import pyjokes
+
 
 eng = pyttsx3.init('sapi5') 
 voice = eng.getProperty('voices') 
@@ -49,11 +52,16 @@ def command():
     with speech.Microphone() as source:
         print("Listening...") #pip install PyAudio
         audio = r.listen(source)
-        type(audio)
+        
 
     try:
         print("Recognizing...") 
-        query = r.recognize_google(audio, language ='en-US')   
+        query = r.recognize_google(audio, language ='en-US') 
+        query = query.lower()
+        if 'pro' in query :
+                query = query.replace('pro', '')
+                
+                speak(query) 
         
     except Exception as e:
         print("Oops! Say that again please...")
@@ -62,48 +70,58 @@ def command():
 
 
 #main program
-command()    
+def run_pro():   
+    query = command()
+    if 'play' in query:
+            song = query.replace('play'," ")
+            speak("playing..." + song)
+            pywhatkit.playonyt(song)
+    elif 'open youtube' in query.lower():
 
-query = command()
-#execution of task per query
+        url = "youtube.com"
+        chrome_path = "C:\Program Files\Google\Chrome\Application\chrome.exe"
+        webbrowser.register('chrome', None, webbrowser.BackgroundBrowser(chrome_path))
+        webbrowser.get('chrome').open_new_tab(url)
 
-if 'wikipedia' in query.lower():
-    speak("Searching wikipedia...")
-    query = query.replace("wikipedia", "")
-    results = wikipedia.summary(query,sentences =5)
-    print(results)
-    speak(results)
-elif 'open youtube' in query.lower():
+    elif 'open google' in query.lower():
 
-    url = "youtube.com"
-    chrome_path = "C:\Program Files\Google\Chrome\Application\chrome.exe"
-    webbrowser.register('chrome', None, webbrowser.BackgroundBrowser(chrome_path))
-    webbrowser.get('chrome').open_new_tab(url)
+        url = "google.com"
+        chrome_path = "C:\Program Files\Google\Chrome\Application\chrome.exe"
+        webbrowser.register('chrome', None, webbrowser.BackgroundBrowser(chrome_path))
+        webbrowser.get('chrome').open_new_tab(url)
+        
+    elif 'open facebook' in query.lower():
 
-elif 'open google' in query.lower():
+        url = "facebook.com"
+        chrome_path = "C:\Program Files\Google\Chrome\Application\chrome.exe"
+        webbrowser.register('chrome', None, webbrowser.BackgroundBrowser(chrome_path))
+        webbrowser.get('chrome').open_new_tab(url)
 
-    url = "google.com"
-    chrome_path = "C:\Program Files\Google\Chrome\Application\chrome.exe"
-    webbrowser.register('chrome', None, webbrowser.BackgroundBrowser(chrome_path))
-    webbrowser.get('chrome').open_new_tab(url)
-    
-elif 'open facebook' in query.lower():
+    elif 'time' in query.lower():
+        strTime = datetime.datetime.now().strftime('%I:%M %p')
+        speak(f"{name} The time is {strTime}")
+    elif 'messenger' in query.lower():
+        codepath = r"C:\Users\HP\AppData\Local\Programs\Messenger\Messenger.exe"
+        os.startfile(codepath)
+    elif 'code blocks' in query.lower():
+        codepath1= "C:\Program Files\CodeBlocks\codeblocks.exe"
+        os.startfile(codepath1)
+    elif 'zoom' in query.lower():
+        codepath2= r"C:\Users\HP\AppData\Roaming\Zoom\\bin\Zoom.exe"
+        os.startfile(codepath2)
+    elif 'who is ' in query:
+            person = query.replace('who is ', " ")
+            info = wikipedia.summary(person, sentences=5)
+            print(info)
+            speak(info)
+    elif 'what is ' in query:
+            thing = query.replace('what is ', " ")
+            result = wikipedia.summary(thing, sentences=5)
+            print(result)
+            speak()
+    elif 'joke' in query :
+            speak(pyjokes.get_joke())
 
-    url = "facebook.com"
-    chrome_path = "C:\Program Files\Google\Chrome\Application\chrome.exe"
-    webbrowser.register('chrome', None, webbrowser.BackgroundBrowser(chrome_path))
-    webbrowser.get('chrome').open_new_tab(url)
-
-elif 'time' in query.lower():
-    strTime = datetime.datetime.now().strftime("%H:%M:%S")
-    speak(f"{name} The time is {strTime}")
-elif 'messenger' in query.lower():
-    codepath = r"C:\Users\HP\AppData\Local\Programs\Messenger\Messenger.exe"
-    os.startfile(codepath)
-elif 'code blocks' in query.lower():
-    codepath1= "C:\Program Files\CodeBlocks\codeblocks.exe"
-    os.startfile(codepath1)
-elif 'zoom' in query.lower():
-    codepath2= r"C:\Users\HP\AppData\Roaming\Zoom\\bin\Zoom.exe"
-    os.startfile(codepath2)
+while True:
+    run_pro()
 
