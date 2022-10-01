@@ -1,12 +1,12 @@
 import pyttsx3 #pip install pyttsx3
 import speech_recognition as speech #pip install speechRecognition
 import datetime
+import calendar
 import wikipedia #pip install wikipedia
 import webbrowser
 import os
 import pywhatkit #pip install pywhatkit
 import pyjokes
-
 
 eng = pyttsx3.init('sapi5') 
 voice = eng.getProperty('voices') 
@@ -121,7 +121,13 @@ def run_pro():
             speak()
     elif 'joke' in query :
             speak(pyjokes.get_joke())
-
+    elif 'date' in query :
+        from datetime import date
+        today = date.today()
+        # Textual month, day and year	
+        d2 = today.strftime("%B %d, %Y")
+        print(f"{name} today is " + d2)
+        speak(f"{name} today is {d2}")
+        
 while True:
     run_pro()
-
